@@ -118,3 +118,47 @@ RsquareAdj(spe.rda.signif)
 # it is comparable across models and datasets. For this reason, you should report 
 # the adjusted R2 when writing up the result of an RDA for an article, or in a 
 # study which compares the explanatory power of different models.
+
+# Testando a significância -----------------------------------------------------------------------------------------------------------------
+
+# The significance of your RDA can be tested using the function anova.cca().
+
+anova.cca(spe.rda.signif, step = 1000)
+
+# You can also test the significance of each variable with by = "term".
+
+anova.cca(spe.rda.signif, step = 1000, by = "term")
+
+# You can also test the significance of each canonical axis with by = "axis". 
+# Recall that these axes represent the variation in explanatory variables in 
+# fewer dimensions.
+
+anova.cca(spe.rda.signif, step = 1000, by = "axis")
+
+# Our full model is statistically significant (p = 0.001), and every variable 
+# included in this model is significant as well (p = 0.001). Every canonical 
+# axis resulting from the RDA is also statistically significant (p = 0.001).
+
+# Gráfico RDA ------------------------------------------------------------------------------------------------------------------------------
+
+# One of the most powerful aspects of RDA is the simultaneous visualization of 
+# your response and explanatory variables (i.e. species and environmental variables).
+
+# Assim como na PCA existem dois tipos de escalas:
+# - Tipo 1: distância entre os objetos reflete as similaridades entre eles.
+# - Tipo 2: ângulos entre as variáveis reflete as corelações entre elas.
+
+# Type 1 scaling
+ordiplot(spe.rda.signif, scaling = 1, type = "text")
+# Type 2 scaling
+ordiplot(spe.rda.signif, scaling = 2, type = "text")
+
+# Type 1 scaling: shows similarities between objects in the response matrix.
+# Sites (numbers) that are closer together have more similar communities.
+# Species that are closer together occupy more sites in common.
+
+# Type 2 scaling: shows the effects of explanatory variables.
+# Longer arrows mean this variable strongly drives the variation 
+# in the community matrix.
+# Arrows pointing in opposite directions have a negative relationship.
+# Arrows pointing in the same direction have a positive relationship.
