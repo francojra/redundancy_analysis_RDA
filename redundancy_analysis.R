@@ -162,3 +162,68 @@ ordiplot(spe.rda.signif, scaling = 2, type = "text")
 # in the community matrix.
 # Arrows pointing in opposite directions have a negative relationship.
 # Arrows pointing in the same direction have a positive relationship.
+
+# Customizando o gráfico RDA ---------------------------------------------------------------------------------------------------------------
+
+# Both plot() and ordiplot() make quick and simple ordination plots, but you can 
+# customize your plots by extracting scores with scores() and manually setting 
+# the aesthetics of points(), text(), and arrows(). 
+
+# Here is an example of a custom triplot. Feel free to play around with the colours 
+# and other parameters to make it your own!
+
+# Custom triplot code!
+
+## extract % explained by the first 2 axes
+perc <- round(100*(summary(spe.rda.signif)$cont$importance[2, 1:2]), 2)
+
+## extract scores - these are coordinates in the RDA space
+sc_si <- scores(spe.rda.signif, display = "sites", choices = c(1,2), scaling = 1)
+sc_sp <- scores(spe.rda.signif, display = "species", choices = c(1,2), scaling = 1)
+sc_bp <- scores(spe.rda.signif, display = "bp", choices = c(1, 2), scaling = 1)
+
+## Custom triplot, step by step
+
+# Set up a blank plot with scaling, axes, and labels
+plot(spe.rda.signif,
+     scaling = 1, # set scaling type 
+     type = "none", # this excludes the plotting of any points from the results
+     frame = FALSE,
+     # set axis limits
+     xlim = c(-1,1), 
+     ylim = c(-1,1),
+     # label the plot (title, and axes)
+     main = "Triplot RDA - scaling 1",
+     xlab = paste0("RDA1 (", perc[1], "%)"), 
+     ylab = paste0("RDA2 (", perc[2], "%)") 
+)
+# add points for site scores
+points(sc_si, 
+       pch = 21, # set shape (here, circle with a fill colour)
+       col = "black", # outline colour
+       bg = "steelblue", # fill colour
+       cex = 1.2) # size
+# add points for species scores
+points(sc_sp, 
+       pch = 22, # set shape (here, square with a fill colour)
+       col = "black",
+       bg = "#f2bd33", 
+       cex = 1.2)
+# add text labels for species abbreviations
+text(sc_sp + c(0.03, 0.09), # adjust text coordinates to avoid overlap with points 
+     labels = rownames(sc_sp), 
+     col = "grey40", 
+     font = 2, # bold
+     cex = 0.6)
+# add arrows for effects of the expanatory variables
+arrows(0,0, # start them from (0,0)
+       sc_bp[,1], sc_bp[,2], # end them at the score value
+       col = "red", 
+       lwd = 3)
+# add text labels for arrows
+text(x = sc_bp[,1] - 0.1, # adjust text coordinate to avoid overlap with arrow tip
+     y = sc_bp[,2] - 0.03, 
+     labels = rownames(sc_bp), 
+     col = "red", 
+     cex = 1, 
+     font = 2)
