@@ -89,4 +89,32 @@ fwd.sel <- ordiR2step(rda(spe.hel ~ 1, data = env.z), # lower model limit (simpl
 fwd.sel$call
 
 # Resultado:
+
 ## rda(formula = spe.hel ~ alt + oxy + dbo, data = env.z)
+
+# What is the adjusted R2 of the RDA with the selected variables?
+
+# Write our new model
+spe.rda.signif <- rda(spe.hel ~ alt + oxy + dbo, data = env.z)
+# check the adjusted R2 (corrected for the number of
+# explanatory variables)
+RsquareAdj(spe.rda.signif)
+
+# Resultado:
+
+## $r.squared
+## [1] 0.5894243
+## 
+## $adj.r.squared
+## [1] 0.5401552
+
+# The explanatory variables (altitude, oxygen and biological oxygen demand) now 
+# explain 59% of the variance in  Y (species abundances across sites, or community 
+# composition). When we correct for the number of variables in X, the adjusted  
+# R2 tells us that three selected variables explain 54% of the variance in species 
+# abundances.
+
+# Because the adjusted R2 is corrected for the number of explanatory variables, 
+# it is comparable across models and datasets. For this reason, you should report 
+# the adjusted R2 when writing up the result of an RDA for an article, or in a 
+# study which compares the explanatory power of different models.
