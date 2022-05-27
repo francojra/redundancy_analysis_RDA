@@ -26,7 +26,7 @@ env
 
 # Análise RDA ------------------------------------------------------------------------------------------------------------------------------
 
-### Nós computamos a análise de RDA usando a função rda() do pacote vegan.
+# Nós computamos a análise de RDA usando a função rda() do pacote vegan.
 
 library(vegan)
 
@@ -37,8 +37,8 @@ library(vegan)
 spe.hel <- decostand(spe, method = "hellinger")
 env.z <- decostand(env, method = "standardize")
 
-### Iremos remover a variável das porque ela apresenta colinearidade dcom várias outras
-### variáveis.
+# Iremos remover a variável das porque ela apresenta colinearidade dcom várias outras
+# variáveis.
 
 env.z <- subset(env.z, select = -das)
 
@@ -66,3 +66,27 @@ summary(spe.rda)
 # variables explain 73.41% of the variation in fish community composition across 
 # sites.”
 
+# Seleção de variáveis ---------------------------------------------------------------------------------------------------------------------
+
+# Se quiser simplificar o modelo, nós podemos performar um stepwise. Essa seleção
+# nos ajuda a selecionar variáveis estatisticamente significantes. Entretanto, 
+# selecionar variáveis ecológicas é mais importante.
+
+# Nós iremos fazer a seleção das nossas 11 variáveis ambientais. Para isso, nós
+# usamos a função ordiR2step().
+
+# Forward selection of variables:
+fwd.sel <- ordiR2step(rda(spe.hel ~ 1, data = env.z), # lower model limit (simple!)
+               scope = formula(spe.rda), # upper model limit (the "full" model)
+               direction = "forward",
+               R2scope = TRUE, # can't surpass the "full" model's R2
+               pstep = 1000,
+               trace = FALSE) # change to TRUE to see the selection process!
+
+# Which variables are retained by the forward selection?
+
+# Check the new model with forward-selected variables
+fwd.sel$call
+
+# Resultado:
+## rda(formula = spe.hel ~ alt + oxy + dbo, data = env.z)
